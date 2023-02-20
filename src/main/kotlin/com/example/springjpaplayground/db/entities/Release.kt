@@ -13,7 +13,7 @@ class Release(
     val title: String,
     @ManyToMany
     @JoinTable(name="release_genre")
-    val genres: List<Genre>
+    var genres: List<Genre>
 ) {
     @Id
     @GeneratedValue(generator = "uuid4")

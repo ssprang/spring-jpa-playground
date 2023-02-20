@@ -2,7 +2,7 @@ package com.example.springjpaplayground.db.entities
 
 import jakarta.persistence.*
 import org.hibernate.annotations.GenericGenerator
-import java.util.*
+import java.util.UUID
 
 
 @Entity
