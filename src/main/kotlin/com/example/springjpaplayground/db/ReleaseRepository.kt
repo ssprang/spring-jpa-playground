@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface ReleaseRepository: JpaRepository<Release, UUID>
+interface ReleaseRepository: JpaRepository<Release, UUID> {
+    fun findByGenresId(genreId: UUID): List<Release>
+    fun findByGenresSubGenresId(subGenreId: UUID): List<Release>
+}
