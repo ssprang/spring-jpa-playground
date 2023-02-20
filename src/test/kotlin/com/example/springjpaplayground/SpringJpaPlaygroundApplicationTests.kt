@@ -60,10 +60,8 @@ internal class ReleaseService {
      * 3. The entity object is obtained externally, not from the database within the same transaction.
      */
     @Transactional
-    fun noNeedOfManualSave(releaseId: UUID): Release? {
-        val foundRelease = repository.findByIdOrNull(releaseId)
-        return foundRelease?.apply { genres = genres - genres[1] }
-    }
+    fun noNeedOfManualSave(releaseId: UUID): Release? =
+        repository.findByIdOrNull(releaseId)?.apply { genres = genres - genres.last() }
 
     @Transactional
     fun verifyGenres(releaseId: UUID, expectedSize: Int) {
