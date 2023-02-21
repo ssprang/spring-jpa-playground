@@ -2,7 +2,9 @@ package com.example.springjpaplayground
 
 import com.example.springjpaplayground.db.GenreRepository
 import com.example.springjpaplayground.db.ReleaseRepository
+import com.example.springjpaplayground.db.AppUserRepository
 import com.example.springjpaplayground.db.entities.Release
+import com.example.springjpaplayground.db.entities.AppUser
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -21,15 +23,20 @@ class SpringJpaPlaygroundApplicationTests {
     private lateinit var repository: ReleaseRepository
     @Autowired
     private lateinit var genreRepository: GenreRepository
+    @Autowired
+    private lateinit var appUserRepository: AppUserRepository
+
 
     @Autowired
     private lateinit var testService: ReleaseService
 
     @Test
     fun test() {
+        val newUser = appUserRepository.save(AppUser(email = "sara.sprang@gmail.com"))
         val release = Release(
             title = "Release me",
-            genres = genreRepository.findAll()
+            genres = genreRepository.findAll(),
+            createdBy = newUser
         )
         val savedRelease = repository.save(release)
         assertThat(savedRelease.id).isNotNull
