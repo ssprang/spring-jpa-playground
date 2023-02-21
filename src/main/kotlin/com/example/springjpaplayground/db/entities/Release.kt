@@ -18,5 +18,5 @@ class Release(
     @Id
     @GeneratedValue(generator = "uuid4")
     @GenericGenerator(name = "uuid4", strategy = "org.hibernate.id.UUIDGenerator")
-    val id: UUID? = null
+    val id: UUID = UUID.randomUUID()
 }

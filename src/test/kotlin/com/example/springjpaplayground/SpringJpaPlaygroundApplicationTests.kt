@@ -35,10 +35,10 @@ class SpringJpaPlaygroundApplicationTests {
         assertThat(savedRelease.id).isNotNull
         assertThat(savedRelease.genres).hasSize(3)
 
-        testService.noNeedOfManualSave(savedRelease.id!!)
+        testService.noNeedOfManualSave(savedRelease.id)
 
         testService.verifyGenres(
-            releaseId = savedRelease.id!!,
+            releaseId = savedRelease.id,
             expectedSize = 2
         )
 
