@@ -17,7 +17,7 @@ class Release(
     var genres: List<Genre>,
     @ManyToOne
     @JoinColumn(name="created_by")
-    val createdBy: AppUser
+    val createdBy: AppUser? = null
 ) {
     @Id
     @GeneratedValue(generator = "uuid4")

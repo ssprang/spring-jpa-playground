@@ -1,10 +1,9 @@
 package com.example.springjpaplayground
 
+import com.example.springjpaplayground.db.AppUserRepository
 import com.example.springjpaplayground.db.GenreRepository
 import com.example.springjpaplayground.db.ReleaseRepository
-import com.example.springjpaplayground.db.AppUserRepository
 import com.example.springjpaplayground.db.entities.Release
-import com.example.springjpaplayground.db.entities.AppUser
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -21,8 +20,10 @@ class SpringJpaPlaygroundApplicationTests {
 
     @Autowired
     private lateinit var repository: ReleaseRepository
+
     @Autowired
     private lateinit var genreRepository: GenreRepository
+
     @Autowired
     private lateinit var appUserRepository: AppUserRepository
 
@@ -31,27 +32,45 @@ class SpringJpaPlaygroundApplicationTests {
     private lateinit var testService: ReleaseService
 
     @Test
-    fun test() {
-        val newUser = appUserRepository.save(AppUser(email = "sara.sprang@gmail.com"))
+    fun `basic test`() {
+        val user = appUserRepository.findByEmail(email = "sara.sprang@gmail.com")
         val release = Release(
             title = "Release me",
             genres = genreRepository.findAll(),
-            createdBy = newUser
+            createdBy = user!!
         )
         val savedRelease = repository.save(release)
         assertThat(savedRelease.id).isNotNull
         assertThat(savedRelease.genres).hasSize(3)
+    }
 
+    @Test
+    fun `no manual save test`() {
+
+        val savedRelease = Release(
+            title = "Release me",
+            genres = genreRepository.findAll()
+        ).let { repository.save(it) }
+
+        // This function removes the last genre from the list of genres
         testService.noNeedOfManualSave(savedRelease.id!!)
 
         testService.verifyGenres(
             releaseId = savedRelease.id!!,
             expectedSize = 2
         )
+    }
+
+    @Test
+    fun `deleting used genres should not be possible`() {
+        Release(
+            title = "Release me",
+            genres = genreRepository.findAll()
+        ).let { repository.save(it) }
 
         assertThatThrownBy {
             genreRepository.deleteAll()
-        } .isInstanceOf(DataIntegrityViolationException::class.java)
+        }.isInstanceOf(DataIntegrityViolationException::class.java)
     }
 }
 
